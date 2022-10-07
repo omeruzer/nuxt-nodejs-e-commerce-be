@@ -1,43 +1,5 @@
 const Product = require('../models/Product');
 const Category = require('../models/Category');
-const {
-    faker
-} = require('@faker-js/faker');
-
-const importData = (req, res) => {
-    for (let i = 0; i < 150; i++) {
-        Category.count().exec(function (err, count) {
-            var random = Math.floor(Math.random() * count)
-            Category.findOne().skip(random).exec(
-                function (err, result) {
-                    const product = new Product({
-                        images: [
-                            faker.image.fashion(),
-                            faker.image.fashion(),
-                            faker.image.fashion()
-                        ],
-                        name: faker.commerce.productName(),
-                        sku: Math.floor(Math.random() * 9999999),
-                        price: faker.commerce.price(), // Math.floor(Math.random() * 100),
-                        category: result._id,
-                        desc: faker.commerce.productDescription(),
-                    })
-                    product.save().then(async (res) => {
-                        await Category.findByIdAndUpdate(res.category, {
-                            $push: {
-                                products: res._id
-                            }
-                        })
-                    }).catch((err) => {
-
-                    });
-                })
-        })
-    }
-    res.json({
-        msg: "Added"
-    })
-}
 
 const all = (req, res) => {
     Product.find()
@@ -60,17 +22,17 @@ const detail = (req, res) => {
             select: 'name'
         })
 
-        .then((result) => {
-            res.json(result)
-        }).catch((err) => {
-            res.json(err)
+    .then((result) => {
+        res.json(result)
+    }).catch((err) => {
+        res.json(err)
 
-        });
+    });
 }
 const add = (req, res) => {
     const product = new Product(req.body)
 
-    product.save().then(async (result) => {
+    product.save().then(async(result) => {
         await Category.findByIdAndUpdate(result.category, {
             $push: {
                 products: result._id
@@ -83,7 +45,7 @@ const add = (req, res) => {
     });
 }
 const edit = (req, res) => {
-    const product = Product.findByIdAndUpdate(req.params.id, req.body).then(async (result) => {
+    const product = Product.findByIdAndUpdate(req.params.id, req.body).then(async(result) => {
 
         await Category.findByIdAndUpdate(result.category, {
             $pull: {
@@ -144,7 +106,7 @@ const newProduct = (req, res) => {
 
 const search = (req, res) => {
     Product.find()
-        .then(async (result) => {
+        .then(async(result) => {
             const data = await result.filter(item => item.name.toString().toLowerCase().includes(req.query.q))
             await res.json(data)
         }).catch((err) => {
@@ -156,7 +118,6 @@ const search = (req, res) => {
 module.exports = {
     all,
     detail,
-    importData,
     add,
     edit,
     newProduct,

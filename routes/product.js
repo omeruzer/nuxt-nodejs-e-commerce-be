@@ -13,7 +13,6 @@ router.post('/', ProductController.add)
 router.patch('/:id', ProductController.edit)
 router.delete('/:id', ProductController.remove)
 router.delete('/delete/all', ProductController.removeAll)
-router.post('/import/data', ProductController.importData)
 router.get('/search/data', ProductController.search)
 
 

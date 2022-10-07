@@ -19,16 +19,16 @@ const product = require('./routes/product')
 const category = require('./routes/category')
 const order = require('./routes/order')
 const faq = require('./routes/faq')
+const importData = require('./routes/importData')
 
 
 
+app.use('/api/import', importData)
 app.use('/api/auth', user)
 app.use('/api/product', product)
 app.use('/api/category', category)
 app.use('/api/order', order)
 app.use('/api/faq', faq)
-
-
 
 app.listen(process.env.PORT, () => {
     console.log(`Listening to ${process.env.PORT}`);
